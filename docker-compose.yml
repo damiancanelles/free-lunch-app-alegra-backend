@@ -1,0 +1,63 @@
+version: "2.2"
+services:
+  rabbit:
+    volumes:
+      - rabbitmq-data:/data
+    networks:
+      - backend
+    image: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  mongodb:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+  kitchen-microservice:
+    build: ./kitchen-microservice
+    restart: on-failure
+    environment:
+      - MONGODB_URL=mongodb://mongo:password@mongodb:27017/db-kitchen?authSource=admin
+      - RABBITMQ_URL=amqp://rabbit:5672
+    depends_on:
+      - rabbit
+      - mongodb
+    networks:
+      - backend
+  storage-microservice:
+    build: "./storage-microservice"
+    restart: on-failure
+    environment:
+      - MONGODB_URL=mongodb://mongo:password@mongodb:27017/db-storage?authSource=admin
+      - RABBITMQ_URL=amqp://rabbit:5672
+    depends_on:
+      - rabbit
+      - mongodb
+    networks:
+      - backend
+  api-gateway:
+    build: ./api-gateway
+    environment:
+      - FRONTEND_URL=http://localhost:3003
+      - KITCHEN_URL=http://kitchen-microservice:3001
+      - STORAGE_URL=http://storage-microservice:3002
+    ports:
+      - "3000:3000"
+    depends_on:
+      - kitchen-microservice
+      - storage-microservice
+    networks:
+      - backend
+volumes:
+  mongodb-data:
+  rabbitmq-data:
+networks:
+  backend:
+    driver: bridge
