@@ -7,7 +7,7 @@
     "start": "node build/index.js",
     "populate_database": "node build/utils/populate_data.js",
     "tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -15,12 +15,17 @@
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/express": "^4.17.15",
+    "@types/jest": "^29.2.6",
     "@types/node": "^18.11.18",
-    "typescript": "^4.9.4"
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "@types/supertest": "^2.0.12"
   },
   "dependencies": {
     "amqplib": "^0.10.3",
-    "axios": "^1.2.3",
     "express": "^4.18.2",
     "mongoose": "^6.8.4"
   }

@@ -31,16 +31,17 @@ amqplib.connect(process.env.RABBITMQ_URL || "amqps://ctifjxnq:htlSe0cIDf96LfnFSH
             }
         }
     )
-
-    const app = express()
-    const PORT = 3002;
-
-    app.use(express.json())
-    app.use("/api/ingredients", ingredientsRoutes)
-
-    app.listen(PORT, () => {
-        console.log(`server running on port ${PORT}`)
-        runDB()
-    })
-
 })})
+
+const app = express()
+const PORT = 3002;
+
+app.use(express.json())
+app.use("/api/ingredients", ingredientsRoutes)
+
+app.listen(PORT, () => {
+    console.log(`server running on port ${PORT}`)
+    runDB()
+})
+
+export default app
